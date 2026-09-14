@@ -170,6 +170,9 @@
 
             setProjectsOverlayTheme(pageTheme, projectOverlay.length - 1);
         }
+        
+        // Apply a new random theme whenever the page is clicked
+        document.addEventListener('click', setPageTheme);
 
         setPageTheme();
     </script>
