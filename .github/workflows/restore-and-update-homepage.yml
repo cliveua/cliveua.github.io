@@ -1,0 +1,36 @@
+name: Restore styling and update homepage copy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  fix-homepage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore original page and update copy
+        run: |
+          git checkout 43002aa7f51422dbe0a40ad41dedfd8cb29d1e0d -- index.html
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          path = Path('index.html')
+          text = path.read_text()
+          text, n1 = re.subn(r'<p class="blurb blurb--line-1">I’m a <strong>Product Designer</strong>.*?</p>', '''<p class="blurb blurb--line-1">I’m a <strong>Product Designer and design leader</strong> based in Amsterdam. I work on complex products where business goals, technology, and people’s needs intersect. I enjoy turning <strong>ambiguity into simple, useful experiences</strong>.</p>''', text, count=1, flags=re.S)
+          text, n2 = re.subn(r'<p class="blurb blurb--line-1">My goal is to create simple and effective user experiences.*?</p>', '''<p class="blurb blurb--line-1">For the past <span id="experience-years"></span> years, I’ve designed digital products and led teams across agencies, startups, and tech companies, from <strong>early-stage ideas to products used by billions of people</strong>.</p>''', text, count=1, flags=re.S)
+          text, n3 = re.subn(r'<p class="blurb blurb--line-1">Over the past <span id="experience-years"></span> years,.*?</p>', '', text, count=1, flags=re.S)
+          text, n4 = re.subn(r'<p class="blurb blurb--line-1">After leading the team responsible.*?</p>', '''<p class="blurb blurb--line-1">I’ve led design for payment experiences at <strong>Booking.com</strong> and now work on <strong>WhatsApp at Meta</strong>, helping shape simple, secure communication experiences for more than 2 billion people and businesses.</p>''', text, count=1, flags=re.S)
+          assert (n1, n2, n3, n4) == (1, 1, 1, 1), (n1, n2, n3, n4)
+          path.write_text(text)
+          PY
+      - name: Commit and remove workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/restore-and-update-homepage.yml
+          git add index.html
+          git commit -m "Restore homepage styling and update copy [skip ci]"
+          git push
