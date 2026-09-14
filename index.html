@@ -49,7 +49,7 @@
             I take great pleasure in helping businesses achieve their goals by <strong>creating experiences</strong> 
             that are useful, usable, and ultimately used by people.</p>
 
-        <p class="blurb blurb--line-1">Over the past 12 years, I have been privileged to create digital experiences for various businesses, 
+        <p class="blurb blurb--line-1">Over the past <span id="experience-years"></span> years, I have been privileged to create digital experiences for various businesses, 
             serving as a product designer and <strong>leading teams</strong> in digital agencies, startups, and tech companies.</p>
       
         <p class="blurb blurb--line-1">After leading the team responsible for designing payment experiences for the world's largest accommodation platform, 
@@ -129,6 +129,8 @@
     </div>
 
     <script type="text/javascript">
+        document.getElementById('experience-years').textContent = new Date().getFullYear() - 2011;
+
         // List of themes
         const backgroundColors = {
             blue: "rgb(28, 42, 244)",
