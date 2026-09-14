@@ -13,7 +13,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Restore original page and update copy
         run: |
-          git checkout 43002aa7f51422dbe0a40ad41dedfd8cb29d1e0d -- index.html
+          curl -sSf https://api.github.com/repos/cliveua/cliveua.github.io/git/blobs/a785ebf62a70e2aac5ddc570f9368c17eadb63ea -o /tmp/blob.json
+          jq -r '.content' /tmp/blob.json | tr -d '\n' | base64 -d > index.html
           python3 - <<'PY'
           from pathlib import Path
           import re
